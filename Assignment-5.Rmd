@@ -1,0 +1,375 @@
+---
+title: 'Assignment 5: Regression and Classification'
+author: "Tayyab Munir - 11716089"
+date: "10/29/2020"
+output:
+  html_document:
+    df_print: paged
+  word_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Question 1
+
+This question involves the use of multiple linear regression on the Auto data set from the course webpage (https://scads.eecs.wsu.edu/index.php/datasets/). Ensure that you remove missing values from the dataframe, and that values are represented in the appropriate types.
+
+```{r}
+
+Auto=read.csv("https://scads.eecs.wsu.edu/wp-content/uploads/2017/09/Auto.csv", header=TRUE, na.strings = "?")
+Auto = na.omit(Auto)
+head(Auto)
+
+```
+
+a. (5%) Perform a multiple linear regression with mpg as the response and all other variables except name as the predictors. Show a printout of the result (including coefficient, error and t values for each predictor). Comment on the output:
+
+```{r}
+
+Auto1 = Auto[1:8]
+lm.fit = lm(mpg~., data = Auto1)
+summary(lm.fit)
+
+
+```
+i) Which predictors appear to have a statistically significant relationship to the response,
+and how do you determine this?
+
+Answer:
+
+The F-statistic (252.4) shows that at least one of the variables is significant and, the p-values of variables shows that displacement, weight, year and origin are significant variables.
+
+ii) What does the coefficient for the displacement variable suggest, in simple terms?
+
+Answer:
+
+Coefficient for displacement suggests that mpg has a positive relation with displacement. For every increase in displacement, the mpg increases by 0.019896 times and, the p-value shows that displacement is significant in predicting mpg as response variable.
+
+b. (5%) Produce diagnostic plots of the linear regression fit. Comment on any problems you see with the fit. Do the residual plots suggest any unusually large outliers? Does the leverage plot identify any observations with unusually high leverage?
+
+```{r}
+
+par(mfrow=c(2,3))
+plot(lm.fit)
+plot(predict(lm.fit), residuals(lm.fit))
+
+```
+
+## Residuals vs Fitted
+
+The plot above shows that there is a non linear trend in the residuals vs fitted. Non-linear relationship is not considered by the linear regression. The residuals increase as the fitted values increase because there are more outliers at higher fitted values.
+
+## Normal Q-Q Plot
+
+For a long range of fitted values, the residuals are normally distributed but at higher range of fitted values, residual don’t have normal distribution and deviate from straight line
+
+## Residuals vs Leverage plot
+
+Residual vs Leverage plot shows that majority of residuals are within the dotted redline called cook’s distance.
+Here probably excluding 14th observation can enhance accuracy of linear regression.
+
+c. (5%) Fit linear regression models with interaction effects. Do any interactions appear to be statistically significant?
+
+
+
+```{r}
+
+Auto1 = Auto[1:8]
+lm.fit=lm(mpg~.*.,data=Auto1)
+summary(lm.fit)
+
+```
+acceleration:origin is statistically significant because it has a low p-value of 0.00365.
+
+acceleration:year is statistically significant because it has a low p-value of 0.03033.
+
+displacement:year is statistically significant because it has a low p-value of 0.01352.
+
+## Question 2
+
+This problem involves the Boston data set, which we saw in class. We will now try to predict per capita crime rate using the other variables in this data set. In other words, per capita crime rate is the response, and the other variables are the predictors.
+
+```{r}
+
+library(MASS)
+names(Boston)
+
+```
+
+a. (6%) For each predictor, fit a simple linear regression model to predict the response. Include the code, but not the output for all models in your solution.
+```{r, results='hide'}
+
+coeff_Uni=0
+
+lm.fit=lm(crim~zn,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[1]=coeff_U[2]
+
+lm.fit=lm(crim~indus,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[2]=coeff_U[2]
+
+lm.fit=lm(crim~chas,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[3]=coeff_U[2]
+
+lm.fit=lm(crim~nox,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[4]=coeff_U[2]
+
+lm.fit=lm(crim~rm,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[5]=coeff_U[2]
+
+lm.fit=lm(crim~age,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[6]=coeff_U[2]
+
+lm.fit=lm(crim~dis,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[7]=coeff_U[2]
+
+lm.fit=lm(crim~rad,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[8]=coeff_U[2]
+
+lm.fit=lm(crim~tax,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[9]=coeff_U[2]
+
+lm.fit=lm(crim~ptratio,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[10]=coeff_U[2]
+
+lm.fit=lm(crim~black,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[11]=coeff_U[2]
+
+lm.fit=lm(crim~lstat,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[12]=coeff_U[2]
+
+lm.fit=lm(crim~medv,data=Boston)
+summary(lm.fit)
+coeff_U=coef(lm.fit)
+coeff_Uni[13]=coeff_U[2]
+
+```
+
+
+b. (6%) In which of the models is there a statistically significant association between the predictor and the response? Considering the meaning of each variable, discuss the relationship between crim and nox, chas, medv and dis in particular. How do these relationships differ?
+
+• lstat is statistically significant because of low p-value (p-val<2e-16). This shows the correlation between lower status of population and the crime rate. positive value indicates higher the lower status of population, higher will be the crime rate.
+
+• zn is a statistically significant predictor for crime rate because of low p-value (5.51e-6). This has a negative correlation with crime rate. The bigger the residential lands are, the lower will be the crime rate.
+
+• Indus is statistically significant because of lower p-value (p-val<2.2e-16). Positive value shows the relation between business acres per town and crime rate. The more business friendly areas, the more crimes will be there.
+
+• chas is statistically insignificant (p-val=0.209).
+
+• nox is statistically significant because of low p-value (p-val<2e-16). Correlation is positive between nitrogen oxide concentration and the crime rate.The more nitogen concentration, the more will be the crime.
+
+• rm is statistically significant because of low p-value (p-val=6.35e-16). The correlation coefficient is negative. This shows, the more the population, the more will be crime.
+
+• dis is significant because of low p-value (p-val<2e-16). The negative value shows the negative correlation.The more the distance from employment centres, the lower will be the crime rate.
+
+• tax is statistically significant (p-val<2e-16). There is positive correlation between property tax and crime rate. The higher the property tax, higher will be the crime rate.
+
+• rad is significant (p-val=2e-16). There is positive correlation. The more accessibility to radial highways, the more will be the crime rate.
+
+• ptratio is statistically significant (p-val=2.94e-11). here is a positive correlation. Higher the pupilteacher ratio, higher will be the crime rate.
+
+• black is statistically significant (p-val<2e-16). There is a negative correlation coefficient. The higher the black population, lower will be the crime rate.
+
+• medv is statistically significant (p-val<2e-16)There is a negative correlation. The lower the median value of owner occupied home, higher will be the crime rate
+
+
+c. (6%) Fit a multiple regression model to predict the response using all the predictors. Describe your results. For which predictors can we reject the null hypothesis H0 : βj = 0?
+
+```{r}
+
+lm.fit=lm(crim~.,data=Boston)
+summary(lm.fit)
+
+```
+zn,nox,lstat,dis,rad,black,and medv are significant on the basis of p-value and null hypothesis can be rejected
+for them
+
+
+d. (6%) How do your results from (a) compare to your results from (c)? Create a plot displaying the univariate regression coefficients from (a) on the x-axis, and the multiple regression coefficients from (c) on the y-axis. That is, each predictor is displayed as a single point in the plot. Its coefficient in a simple linear regression model is shown on the x-axis, and its coefficient estimate in the multiple linear regression model is shown on the y-axis. What does this plot tell you about the various predictors?
+
+```{r}
+
+lm.fit=lm(crim~.,data=Boston)
+coeff_M=coef(lm.fit)
+coeff_M=coeff_M[2:14]
+plot(coeff_M~coeff_Uni)
+
+```
+
+One of the variables in uni-variate coefficient differs greatly from multi-variate coefficient. In case of other variables, the uni-variate coefficient is close to multi-variate coefficient. The difference exists between multi-variate and co-variate estimates because the variables could be correlated.
+
+e. (6%) Is there evidence of non-linear association between any of the predictors and the response? To answer this question, for each predictor X, fit a model of the form Y = β0 + β1X + β2X2 + β3X3+ ε Hint: use the poly() function in R. Again, include the code, but not the output for each model in your solution, and instead describe any non-linear trends you uncover.
+
+```{r, results='hide'}
+
+summary(lm(crim ~ zn + I(zn^2) + I(zn^3), data = Boston))
+
+summary(lm(crim ~ indus + I(indus^2) + I(indus^3), data = Boston))
+
+summary(lm(crim ~ nox + I(nox^2) + I(nox^3), data = Boston))
+
+summary(lm(crim ~ rm + I(rm^2) + I(rm^3), data = Boston))
+
+summary(lm(crim ~ age + I(age^2) + I(age^3), data = Boston))
+
+summary(lm(crim ~ dis + I(dis^2) + I(dis^3), data = Boston))
+
+summary(lm(crim ~ rad + I(rad^2) + I(rad^3), data = Boston))
+
+summary(lm(crim ~ tax + I(tax^2) + I(tax^3), data = Boston))
+
+summary(lm(crim ~ ptratio + I(ptratio^2) + I(ptratio^3), data = Boston))
+
+summary(lm(crim ~ black + I(black^2) + I(black^3), data = Boston))
+
+summary(lm(crim ~ lstat + I(lstat^2) + I(lstat^3), data = Boston))
+
+summary(lm(crim ~ medv + I(medv^2) + I(medv^3), data = Boston))
+
+```
+
+There is a non linear relationship for Nox, ptratio, dis, and medv with the response variable. This is clear from p-values for squared and cube terms of the prediction variables and, there is a non linear relationship for the age because only the cube and square values of age have p-value which are significant. Furthermore, no evidence of non linear relation for the rest of them.
+
+
+## Question 3
+
+Suppose we collect data for a group of students in a statistics class with variables:
+
+X1 = hours studied,
+
+X2 = undergrad GPA,
+
+X3 = PSQI score (a sleep quality index), and
+
+Y = receive an A.
+
+We fit a logistic regression and produce estimated coefficient, β0 = −7, β1 = 0.1, β2 = 1, β3 = -.04.
+
+a. (5%) Estimate the probability that a student who studies for 32 h, has a PSQI score of 12 and has an undergrad GPA of 3.0 gets an A in the class. Show your work.
+
+Solution:
+
+probability= eB0+B1X1+B2X2+B3X3/1+eB0+B1X1+B2X2+B3X3 = A/B
+```{r}
+
+A = 2.71828^(-7+(0.1)*(32)+(1)*(3)+(-0.04)*(12))
+B = 1+2.71828^(-7+(0.1)*(32)+(1)*(3)+(-0.04)*(12))
+probability = A/B
+probability
+
+```
+b. (5%) How many hours would the student in part (a) need to study to have a 50 % chance of getting an A in the class? Show your work.
+
+Solution:
+
+log ((p(x)/1-p(x)) = BO+B1X1+B2X2+B3X3
+
+```{r}
+
+C = log((0.5)/(1-0.5))
+study_hours = (7-(1)*(3)+(0.04)*(12))/0.1
+study_hours
+
+```
+
+c. (5%) How many hours would a student with a 3.0 GPA and a PSQI score of 3 need to study to have a 50 % chance of getting an A in the class? Show your work.
+
+Solution:
+
+log ((p(x)/1-p(x)) = BO+B1X1+B2X2+B3X3
+
+
+```{r}
+
+D = log((0.5)/(1-0.5))
+hours_for_A = (7-(1)*(3)+(0.04)*(3))/0.1
+hours_for_A
+
+```
+
+## Question 4
+
+For this question, you will a naïve Bayes model to classify newspaper articles by their section. You will be provided a set of news articles (http://scads.eecs.wsu.edu/index.php/datasets) collected from the Guardian (a British newspaper). The articles are cleared of major confounding factors, such as HTML tags, but it is up to you to check the articles for other problems and to prepare them for classification.
+
+```{r}
+
+articles = read.csv("C:/Users/tayya/OneDrive/Desktop/Fall 2020/Data Science/Assignment 5/Data/GuardianArticles.csv")
+
+
+func_to_clean = function(stringData) {
+  stringData = gsub("<.*?>", "", stringData)
+  stringData = gsub("[[:punct:]]", "", stringData)
+  stringData = gsub("[[:digit:]]", "", stringData)
+  stringData = tolower(stringData)
+  return(stringData)
+}
+
+articles1 = func_to_clean(articles)
+
+
+```
+
+
+a. Tokenization (20%)
+In order to use Naïve Bayes effectively, you will need to split your text into tokens. It is common practice when doing this to reduce your words to their stems so that conjugations produce less noise in your data. For example, the words "speak", "spoke", and "speaking" are all likely to denote a similar context, and so a stemmed tokenization
+will merge all of them into a single stem. R has several libraries for tokenization, stemming and text mining. Some you may want to use as a starting point are tokenizers, SnowballC, tm respectively, or alternatively quanteda, which will handle the aforementioned along with building your model in the next step. You will need to produce a document-term matrix from your stemmed tokenized data. This will have a very wide feature set (to be reduced in the following step) where each word stem is a feature, and each article has a list of values representing the number of occurrences of each stem in its body. Before representing the feature set in a non-compact storage format (such as a plain matrix), you will want to remove any word which appears in too few documents (typically fewer than 1% of documents, but you can be more or less stringent as you see fit). You may also use a boolean for word presence/absence if you find it more effective. To demonstrate your completion of this part, you can simply select and print the text of a random article along with the non-zero entries of its feature vector.
+
+
+```{r}
+library(tm)
+library(tokenizers)
+library(corpus)
+
+```
+
+
+```{r}
+
+
+
+body = Corpus(VectorSource(articles$body))
+
+term_doc_matrix = TermDocumentMatrix(body)
+
+as.matrix(term_doc_matrix[17, which(as.matrix(term_doc_matrix[17, ]) != 0)])
+
+
+
+```
+
+b. Classification (20%)
+For the final portion of this assignment, you will build and test a Naïve Bayes classifier with your data. First, you will need to use feature selection to reduce your feature set. A popular library for this is caret. It has many functionalities for reducing feature sets, including removing highly correlated features. You may wish to try several different methods to see which produces the best results for the following steps.
+Next, you will split your data into a training set and a test set. Your training set should comprise approximately 80% of your articles, however, you may try several sizes to find which produces the best results. Whatever way you split your training and test sets, however, you should try to ensure that your six article categories are equally represented in both sets.
+Next, you will build your Naïve Bayes classifier from your training data. The e1071 package is most commonly used for this. Finally, you can use your model to predict the categories of your test data.
+Once you have produced a model that generates the best predictions you can get, print a confusion matrix of the results to demonstrate your completion of this task. For each class, give scores for precision (TruePositives / TruePositives+FalsePositives) and recall (TruePositives / TruePositives+FalseNegatives). To do this, you may want to use the confusionMatrix() function.
+
+
+```{r}
+
+```
+
